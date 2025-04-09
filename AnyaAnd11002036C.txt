@@ -1,0 +1,143 @@
+//	C. Anya and 1100
+//	time limit per test3 seconds
+//	memory limit per test256 megabytes
+//	While rummaging through things in a distant drawer, Anya found a beautiful string s
+//	 consisting only of zeros and ones.
+//	
+//	Now she wants to make it even more beautiful by performing q
+//	 operations on it.
+//	
+//	Each operation is described by two integers i
+//	 (1≤i≤|s|
+//	) and v
+//	 (v∈{0,1}
+//	) and means that the i
+//	-th character of the string is assigned the value v
+//	 (that is, the assignment si=v
+//	 is performed).
+//	
+//	But Anya loves the number 1100
+//	, so after each query, she asks you to tell her whether the substring "1100" is present in her string (i.e. there exist such 1≤i≤|s|−3
+//	 that sisi+1si+2si+3=1100
+//	).
+//	
+//	Input
+//	The first line contains one integer t
+//	 (1≤t≤104
+//	) — the number of test cases.
+//	
+//	The first line of the test case contains the string s
+//	 (1≤|s|≤2⋅105
+//	), consisting only of the characters "0" and "1". Here |s|
+//	 denotes the length of the string s
+//	.
+//	
+//	The next line contains an integer q
+//	 (1≤q≤2⋅105
+//	) — the number of queries.
+//	
+//	The following q
+//	 lines contain two integers i
+//	 (1≤i≤|s|
+//	) and v
+//	 (v∈{0,1}
+//	), describing the query.
+//	
+//	It is guaranteed that the sum of |s|
+//	 across all test cases does not exceed 2⋅105
+//	. It is also guaranteed that the sum of q
+//	 across all test cases does not exceed 2⋅105
+//	.
+//	
+//	Output
+//	For each query, output "YES", if "1100" is present in Anya's string; otherwise, output "NO".
+//	
+//	You can output the answer in any case (upper or lower). For example, the strings "yEs", "yes", "Yes", and "YES" will be recognized as positive responses.
+//	
+//	Example
+//	InputCopy
+//	4
+//	100
+//	4
+//	1 1
+//	2 0
+//	2 0
+//	3 1
+//	1100000
+//	3
+//	6 1
+//	7 1
+//	4 1
+//	111010
+//	4
+//	1 1
+//	5 0
+//	4 1
+//	5 0
+//	0100
+//	4
+//	3 1
+//	1 1
+//	2 0
+//	2 1
+//	OutputCopy
+//	NO
+//	NO
+//	NO
+//	NO
+//	YES
+//	YES
+//	NO
+//	NO
+//	YES
+//	YES
+//	YES
+//	NO
+//	NO
+//	NO
+//	NO
+
+package february;
+
+import java.util.Scanner;
+
+public class AnyaAnd11002036C {
+	public static void main(String[] args) {
+		Scanner sc=new Scanner(System.in);
+		int tests=sc.nextInt();
+		while(tests-->0) {
+			String str=sc.next();
+			char[] charArray=str.toCharArray();
+			int count=0;
+			int n=charArray.length;
+			for(int i=0;i<n-3;i++) {
+				count+=(isString(i,charArray,n)? 1: 0);
+			}			
+			int queries=sc.nextInt();
+			while(queries-->0) {
+				int index=sc.nextInt();
+				index--;
+				int val=sc.nextInt();
+				// we check for the no of "1100" substrings before and after the operation
+				// since the string "1100" is of length 4 , then we check for index-3 to index 
+				// probability that the current index could be at any one of the 4 indexes
+				// if the count is still>0 then the string exists
+				if(charArray[index]!=(char) ((char)val+'0')) {					
+					boolean before=isString(index-3,charArray,n)||isString(index-2,charArray,n)||isString(index-1,charArray,n)||isString(index,charArray,n);
+					charArray[index]=(char) ((char)val+'0');
+					boolean after=isString(index-3,charArray,n)||isString(index-2,charArray,n)||isString(index-1,charArray,n)||isString(index,charArray,n);					
+					count+=(before==after? 0: (before==true)? -1: 1);					
+				}
+				System.out.println(count>0? "YES": "NO");
+			}
+		}
+		sc.close();
+	}
+	
+	static boolean isString(int i,char[] charArray,int n) {	
+		if(i<0)return false;
+		if(i>=n-3)return false;
+		String str=""+charArray[i]+charArray[i+1]+charArray[i+2]+charArray[i+3];
+		return str.equals("1100");
+	}	
+}
