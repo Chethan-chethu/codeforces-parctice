@@ -1,0 +1,163 @@
+//	B. Medians
+//	time limit per test1 second
+//	memory limit per test256 megabytes
+//	You are given an array a=[1,2,…,n]
+//	, where n
+//	 is odd, and an integer k
+//	.
+//	
+//	Your task is to choose an odd positive integer m
+//	 and to split a
+//	 into m
+//	 subarrays†
+//	 b1,b2,…,bm
+//	 such that:
+//	
+//	Each element of the array a
+//	 belongs to exactly one subarray.
+//	For all 1≤i≤m
+//	, |bi|
+//	 is odd, i.e., the length of each subarray is odd.
+//	median([median(b1),median(b2),…,median(bm)])=k
+//	, i.e., the median‡
+//	 of the array of medians of all subarrays must equal k
+//	. median(c)
+//	 denotes the median of the array c
+//	.
+//	†
+//	A subarray of the array a
+//	 of length n
+//	 is the array [al,al+1,…,ar]
+//	 for some integers 1≤l≤r≤n
+//	.
+//	
+//	‡
+//	A median of the array of odd length is the middle element after the array is sorted in non-decreasing order. For example: median([1,2,5,4,3])=3
+//	, median([3,2,1])=2
+//	, median([2,1,2,1,2,2,2])=2
+//	.
+//	
+//	Input
+//	Each test consists of multiple test cases. The first line contains a single integer t
+//	 (1≤t≤5000
+//	) — the number of test cases. The description of the test cases follows.
+//	
+//	The first line of each test case contains two integers n
+//	 and k
+//	 (1≤k≤n<2⋅105
+//	, n
+//	 is odd) — the length of array a
+//	 and the desired median of the array of medians of all subarrays.
+//	
+//	It is guaranteed that the sum of n
+//	 over all test cases does not exceed 2⋅105
+//	.
+//	
+//	Output
+//	For each test case:
+//	
+//	If there is no suitable partition, output −1
+//	 in a single line.
+//	Otherwise, in the first line, output an odd integer m
+//	 (1≤m≤n
+//	), and in the second line, output m
+//	 distinct integers p1,p2,p3,…,pm
+//	 (1=p1<p2<p3<…<pm≤n
+//	) — denoting the left borders of each subarray.
+//	In detail, for a valid answer [p1,p2,…,pm]
+//	:
+//	
+//	b1=[ap1,ap1+1,…,ap2−1]
+//	b2=[ap2,ap2+1,…,ap3−1]
+//	…
+//	bm=[apm,apm+1,…,an]
+//	.
+//	If there are multiple solutions, you can output any of them.
+//	
+//	Example
+//	InputCopy
+//	4
+//	1 1
+//	3 2
+//	3 3
+//	15 8
+//	OutputCopy
+//	1
+//	1
+//	3
+//	1 2 3
+//	-1
+//	5
+//	1 4 7 10 13
+//	Note
+//	In the first test case, the given partition has m=1
+//	 and b1=[1]
+//	. It is obvious that median([median([1])])=median([1])=1
+//	.
+//	
+//	In the second test case, the given partition has m=3
+//	 and:
+//	
+//	b1=[1]
+//	b2=[2]
+//	b3=[3]
+//	Therefore, median([median([1]),median([2]),median([3])])=median([1,2,3])=2
+//	.
+//	
+//	In the third test case, there is no valid partition for k=3
+//	.
+//	
+//	In the fourth test case, the given partition has m=5
+//	 and:
+//	
+//	b1=[1,2,3]
+//	b2=[4,5,6]
+//	b3=[7,8,9]
+//	b4=[10,11,12]
+//	b5=[13,14,15]
+//	Therefore, median([median([1,2,3]),median([4,5,6]),median([7,8,9]),median([10,11,12]),median([13,14,15])])=median([2,5,8,11,14])=8
+//	.
+
+package february;
+
+import java.util.Scanner;
+
+public class Medians2032B {
+	public static void main(String[] args) {
+		Scanner sc=new Scanner(System.in);
+		int tests=sc.nextInt();
+		while(tests-->0) {
+			int n=sc.nextInt();
+			int k=sc.nextInt();
+			if(n==1)System.out.println("1\n1");
+			// if the medain point is given to be any of the border
+			// value , then it can't be divided , as left or right 
+			// side of the median will have 0 elements , and 0 can't be divided
+			else if(k==1 || k==n)System.out.println("-1");
+			// By observation we can see that the left and right side
+			// of median , the no of elements will have same pairity
+			// if they are equal divide into subarrays of size 1
+			// else divide it into subarrays of min(left,right) no 
+			// of subarrays of length 1 and for the last array left
+			// either on the left or the right side will be odd 
+			else {
+				int l=k-1;
+				int r=k+1;
+				int count=0;
+				StringBuilder sb1=new StringBuilder("");
+				StringBuilder sb2=new StringBuilder("");
+				for(int i=1,j=r;i<k && j<=n;i++,j++) {
+					sb1.append(i+" ");
+					sb2.append(j+" ");
+					count+=2;
+				}
+				sb1.append(k+" ");
+				count++;
+				System.out.println(count);
+				System.out.print(sb1);
+				System.out.println(sb2);
+			}
+			}
+		sc.close();
+	}
+}
