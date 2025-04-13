@@ -1,0 +1,135 @@
+//	B. Stalin Sort
+//	time limit per test1 second
+//	memory limit per test256 megabytes
+//	Stalin Sort is a humorous sorting algorithm designed to eliminate elements which are out of place instead of bothering to sort them properly, lending itself to an O(n)
+//	 time complexity.
+//	
+//	It goes as follows: starting from the second element in the array, if it is strictly smaller than the previous element (ignoring those which have already been deleted), then delete it. Continue iterating through the array until it is sorted in non-decreasing order. For example, the array [1,4,2,3,6,5,5,7,7]
+//	 becomes [1,4,6,7,7]
+//	 after a Stalin Sort.
+//	
+//	We define an array as vulnerable if you can sort it in non-increasing order by repeatedly applying a Stalin Sort to any of its subarrays∗
+//	, as many times as is needed.
+//	
+//	Given an array a
+//	 of n
+//	 integers, determine the minimum number of integers which must be removed from the array to make it vulnerable.
+//	
+//	∗
+//	An array a
+//	 is a subarray of an array b
+//	 if a
+//	 can be obtained from b
+//	 by the deletion of several (possibly, zero or all) elements from the beginning and several (possibly, zero or all) elements from the end.
+//	
+//	Input
+//	Each test consists of several test cases. The first line contains a single integer t
+//	 (1≤t≤500
+//	) — the number of test cases. This is followed by descriptions of the test cases.
+//	
+//	The first line of each test case contains a single integer n
+//	 (1≤n≤2000
+//	) — the size of the array.
+//	
+//	The second line of each test case contains n
+//	 integers a1,a2,…,an
+//	 (1≤ai≤109
+//	).
+//	
+//	It is guaranteed that the sum of n
+//	 over all test cases does not exceed 2000
+//	.
+//	
+//	Output
+//	For each test case, output a single integer — the minimum number of integers which must be removed from the array to make it vulnerable.
+//	
+//	Example
+//	InputCopy
+//	6
+//	7
+//	3 6 4 9 2 5 2
+//	5
+//	5 4 4 2 2
+//	8
+//	2 2 4 4 6 6 10 10
+//	1
+//	1000
+//	9
+//	6 8 9 10 12 9 7 5 4
+//	7
+//	300000000 600000000 400000000 900000000 200000000 400000000 200000000
+//	OutputCopy
+//	2
+//	0
+//	6
+//	0
+//	4
+//	2
+//	Note
+//	In the first test case, the optimal answer is to remove the numbers 3
+//	 and 9
+//	. Then we are left with a=[6,4,2,5,2]
+//	. To show this array is vulnerable, we can first apply a Stalin Sort on the subarray [4,2,5]
+//	 to get a=[6,4,5,2]
+//	 and then apply a Stalin Sort on the subarray [6,4,5]
+//	 to get a=[6,2]
+//	, which is non-increasing.
+//	
+//	In the second test case, the array is already non-increasing, so we don't have to remove any integers.
+
+package february;
+
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Scanner;
+
+public class StalinSort2027B {
+	public static void main(String[] args) {
+		Scanner sc=new Scanner(System.in);
+		int tests=sc.nextInt();
+		while(tests-->0) {
+		int n=sc.nextInt();
+		int[] array=new int[n];
+		var map=new HashMap<Integer,Integer>();
+		
+		// put the each unique occurence of a number 
+		// in map as all the numbers towards the 
+		// left of the number has to be removed
+		// irrespective of greater/lesser (equals is not the case,since this shall be the first occurence)		
+		for(int i=0;i<n;i++) {
+			int temp=sc.nextInt();
+			array[i]=temp;
+			map.putIfAbsent(temp,i);
+		}
+		
+		// count the no of element strictly greater towards the right
+		// as they should be mandatorily removed or else a vulnerable
+		// array cannot be obtained
+		int[] countArray=new int[n];
+		for(int i=0;i<n-1;i++) {
+			int count=0;
+			for(int j=i+1;j<n;j++) {
+				count+=array[i]<array[j]? 1: 0;
+			}
+			countArray[i]=count;
+		}
+		
+		// for any index the answer will be 
+		// remove all the elements left to it's first occurence
+		// and remove all the elements that are strictly greater to the
+		// right of it , brute force to get all the possibilities
+		// since the value of n is less
+		int res=n-1;
+		Iterator<Map.Entry<Integer,Integer>> iterator=map.entrySet().iterator();		
+		while(iterator.hasNext()) {
+			Map.Entry<Integer,Integer> entry=iterator.next();
+			int index=entry.getValue();
+			res=Math.min(res,index+countArray[index]);
+		}
+		
+		System.out.println(res);
+		}
+		sc.close();
+	}
+}
