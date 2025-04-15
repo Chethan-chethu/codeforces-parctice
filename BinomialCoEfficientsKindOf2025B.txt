@@ -1,0 +1,98 @@
+//	B. Binomial Coefficients, Kind Of
+//	time limit per test2 seconds
+//	memory limit per test512 megabytes
+//	Recently, akshiM met a task that needed binomial coefficients to solve. He wrote a code he usually does that looked like this:
+//	
+//	    for (int n = 0; n < N; n++) { // loop over n from 0 to N-1 (inclusive)
+//	        C[n][0] = 1;
+//	        C[n][n] = 1;
+//	        for (int k = 1; k < n; k++) // loop over k from 1 to n-1 (inclusive)
+//	            C[n][k] = C[n][k - 1] + C[n - 1][k - 1];
+//	    }
+//	Unfortunately, he made an error, since the right formula is the following:
+//	
+//	            C[n][k] = C[n - 1][k] + C[n - 1][k - 1]
+//	But his team member keblidA is interested in values that were produced using the wrong formula. Please help him to calculate these coefficients for t
+//	 various pairs (ni,ki)
+//	. Note that they should be calculated according to the first (wrong) formula.
+//	
+//	Since values C[ni][ki]
+//	 may be too large, print them modulo 109+7
+//	.
+//	
+//	Input
+//	The first line contains a single integer t
+//	 (1≤t≤105
+//	) — the number of pairs. Next, t
+//	 pairs are written in two lines.
+//	
+//	The second line contains t
+//	 integers n1,n2,…,nt
+//	 (2≤ni≤105
+//	).
+//	
+//	The third line contains t
+//	 integers k1,k2,…,kt
+//	 (1≤ki<ni
+//	).
+//	
+//	Output
+//	Print t
+//	 integers C[ni][ki]
+//	 modulo 109+7
+//	.
+//	
+//	Example
+//	InputCopy
+//	7
+//	2 5 5 100000 100000 100000 100000
+//	1 2 3 1 33333 66666 99999
+//	OutputCopy
+//	2
+//	4
+//	8
+//	2
+//	326186014
+//	984426998
+//	303861760
+
+
+package february;
+
+import java.util.Scanner;
+
+public class BinomialCoEfficientsKindOf2025B {
+	private final static int  modulo=1000000000+7;
+	public static void main(String[] args) {
+		Scanner sc=new Scanner(System.in);
+		int tests=sc.nextInt();
+		int temp;
+		int[] k=new int[tests];
+		for(int i=0;i<tests;i++)temp=sc.nextInt();
+		for(int i=0;i<tests;i++)k[i]=sc.nextInt();		
+		StringBuilder sb=new StringBuilder("");
+		// Base "2" will be raising to the given power , that will be the result
+		for(int i=0;i<tests;i++)sb.append(solve(2,k[i])+"\n");		
+		System.out.println(sb);
+		sc.close();
+	}
+	
+//	Table C looks like this - by observing pattern , the values are nothing
+//	but powers of 2, so we calculate the powers using binary exponentaition
+//	similar to pascal's triangle/binomial coefficient ie nCk combinations
+//	1             
+//	1 1              
+//	1 2 1              
+//	1 2 4 1            
+//	1 2 4 8 1             
+//	1 2 4 8 16 1 
+	
+	public static long solve(int base,int power) {
+		if(power==0)return 1;
+		long p=solve(base,power/2);
+		long ans=(p*p)%modulo;
+		if(power%2==1)ans=(ans*base)%modulo;
+		return ans;
+	}
+	
+}
